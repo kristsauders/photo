@@ -1,0 +1,2 @@
+{"ts":1366680055967,"silentsave":true,"restoring":false,"patch":[[]],"length":0}
+{"contributors":[],"silentsave":false,"ts":1366680054973,"patch":[[{"diffs":[[1,"{\n  \"name\":\"photo\",\n  \"version\":\"0.0.1\",\n  \"dependencies\":{\n    \"express\":\"\"\n  }\n}"]],"start1":0,"start2":0,"length1":0,"length2":82}]],"length":82,"saved":false}
