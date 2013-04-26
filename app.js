@@ -24,6 +24,8 @@ passport.use(new FacebookStrategy({
     callbackURL: 'http://photo.hp.af.cm/auth/facebook/callback'
   },
   function(accessToken, refreshToken, profile, done) {
+    // Add access token to profile, to make it available to views
+    profile.access_token = accessToken;
     return done(null, profile);
   }
 ));
