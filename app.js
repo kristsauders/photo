@@ -21,7 +21,8 @@ if(process.env.VCAP_SERVICES!=undefined) {
 passport.use(new FacebookStrategy({
     clientID: '241385652670782',
     clientSecret: '348a68ede0be7bf1102e492c58534a02',
-    callbackURL: 'http://photo.hp.af.cm/auth/facebook/callback'
+    //callbackURL: 'http://photo.hp.af.cm/auth/facebook/callback'
+    callbackURL: 'http://photo.kristsauders.c9.io/auth/facebook/callback'
   },
   function(accessToken, refreshToken, profile, done) {
     // Add access token to profile, to make it available to views
@@ -65,13 +66,12 @@ app.get('/', function(req, res) {
         console.log(kittens);
         log.log("debug", kittens);
     });
-    if(req.user==undefined) {
-        res.redirect('/auth/facebook');
-    }
-    else {
+    if(req.user!=undefined) {
         console.log('Pageload by user: ' + req.user.displayName);
         log.info("Pageload by user: " + req.user.displayName);
         res.render('index', { user: req.user });
+    } else {
+        res.render('index', { user: { authenticated: false } } );
     }
 });
 

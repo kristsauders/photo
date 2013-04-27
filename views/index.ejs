@@ -24,7 +24,7 @@
         <script src="/js/Root-ctrl.js"></script>
 
         <script>
-            var user = <%- user %>;
+            var user = <%- JSON.stringify(user) %>;
         </script>
     </head>
 
@@ -68,22 +68,6 @@
         </div>
         
         <div data-ng-view></div>
-
-        <div class="container">
-            <div class="hero-unit">
-                <h1>Hello, world!</h1>
-                <p><%=JSON.stringify(user)%></p>
-                <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
-                <p>
-                    <div>
-                      <label>Name:</label>
-                      <input type="text" ng-model="yourName" placeholder="Enter a name here">
-                      <hr>
-                      <h1>Hello {{yourName}} and {{testVar}}!</h1>
-                    </div>  
-                </p>
-            </div>
-        </div>
     
     </body>
 </html>
