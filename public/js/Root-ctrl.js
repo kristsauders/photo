@@ -13,8 +13,13 @@ function RootCtrl($scope, $location) {
     
     $scope.user = user;
     
-    if(!$scope.user.authenticated) {
+    console.log($scope.user);
+    console.log($scope.user.authenticated);
+    
+    if($scope.user.authenticated) {
         $location.path('/albums');
+    } else {
+        $location.path('/');
     }
 
 }
