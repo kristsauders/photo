@@ -62,10 +62,10 @@ app.get('/auth/facebook/callback',
                                       failureRedirect: '/login' }));
 
 app.get('/', function(req, res) {
-    Kitten.find({ name: "fluffy" }, function(err,kittens){
-        console.log(kittens);
-        log.log("debug", kittens);
-    });
+    //Kitten.find({ name: "fluffy" }, function(err,kittens){
+    //    console.log(kittens);
+    //    log.log("debug", kittens);
+    //});
     if(req.user!=undefined) {
         console.log('Pageload by user: ' + req.user.displayName);
         log.info("Pageload by user: " + req.user.displayName);
@@ -74,6 +74,11 @@ app.get('/', function(req, res) {
     } else {
         res.render('index', { user: { authenticated: false } } );
     }
+});
+
+app.get('/auth/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
 });
 
 mongoose.connect('mongodb://localhost/test');
@@ -97,10 +102,10 @@ var Kitten = mongoose.model('Kitten', kittySchema);
 var fluffy = new Kitten({ name: 'fluffy' });
 //fluffy.speak();// "Meow name is fluffy"
 
-fluffy.save(function (err, fluffy) {
-  if (err){} // TODO handle the error
+//fluffy.save(function (err, fluffy) {
+//  if (err){} // TODO handle the error
   //fluffy.speak();
-});
+//});
 
 log.log("debug", {sleep:"all night", work:"all day"});
 
