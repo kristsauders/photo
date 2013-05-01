@@ -52,25 +52,39 @@ function AlbumsCtrl($scope, $http, $timeout) {
     console.log('AlbumsCtrl');
 
     $scope.confirmAuth();
+    
+    $scope.albums = [];
 
-    var url = "https://graph.facebook.com/me/albums?callback=JSON_CALLBACK&access_token=" + $scope.user.access_token;
-
-    $http.jsonp(url).success(function(data) {
-        console.log(data);
-        $scope.albums = data.data;
+    var init = function() {
         $timeout(function() {
             var $c = $('#albums');
             $c.imagesLoaded(function() {
+                $c.fadeIn();
                 $c.isotope({
                     itemSelector: '.span3',
                     masonry: {
                         columnWidth: 300
                     }
                 });
-                $('#albums .span3').each(function(){$(this).fadeIn()});
             });
         });
-    });
+    };
+    
+    var getPage = function(pageUrl) {
+        $http.jsonp(pageUrl).success(function(data) {
+            console.log(data);
+            $scope.albums.push.apply($scope.albums, data.data);
+            if(data.paging.next!==undefined) {
+                getPage(data.paging.next + '&callback=JSON_CALLBACK');
+            } else {
+                init();
+            }
+        });
+    };
+
+    var url = "https://graph.facebook.com/me/albums?limit=500&fields=id,name,cover_photo&callback=JSON_CALLBACK&access_token=" + $scope.user.access_token;
+
+    getPage(url);
 
 }
 AlbumsCtrl.$inject = ['$scope', '$http', '$timeout'];
@@ -80,29 +94,71 @@ function PhotosCtrl($scope, $http, $timeout, $routeParams) {
     console.log('PhotosCtrl');
 
     $scope.confirmAuth();
+    
+    $scope.photos = [];
 
-    var url = "https://graph.facebook.com/" + $routeParams.albumId + "/photos?callback=JSON_CALLBACK&access_token=" + $scope.user.access_token;
-
-    $http.jsonp(url).success(function(data) {
-        console.log(data);
-        $scope.photos = data.data;
+    var init = function() {
         $timeout(function() {
             var $c = $('#photos');
             $c.imagesLoaded(function() {
+                $c.fadeIn();
                 $c.isotope({
                     itemSelector: '.span3',
                     masonry: {
                         columnWidth: 300
                     }
                 });
-                $('#photos .span3').each(function(){$(this).fadeIn()});
             });
         });
-    });
+    };
+    
+    var getPage = function(pageUrl) {
+        $http.jsonp(pageUrl).success(function(data) {
+            console.log(data);
+            $scope.photos.push.apply($scope.photos, data.data);
+            if(data.paging.next!==undefined) {
+                getPage(data.paging.next + '&callback=JSON_CALLBACK');
+            } else {
+                init();
+            }
+        });
+    };
+
+    var url = "https://graph.facebook.com/" + $routeParams.albumId + "/photos?limit=500&fields=id,images&callback=JSON_CALLBACK&access_token=" + $scope.user.access_token;
+    
+    getPage(url);
     
     $scope.importPhotos = function() {
         $('#photos').isotope({filter: '.photoSelected'});
-        //$scope.changeHash('/me/photos');
+        $timeout(function(){
+            $('#photos').fadeOut();
+            $('h2#buttons').fadeOut();
+            var photos = $scope.photos;
+            var selectedPhotos = [];
+            for(var i in photos) {
+                if(photos[i].selected)
+                    selectedPhotos.push(photos[i]);
+            }
+            $http.post('/me/photos', selectedPhotos).success(function(data) {
+                console.log(data);
+            });
+            $scope.$parent.photos = selectedPhotos;
+            $timeout(function(){
+                $scope.changeHash('/me/photos');
+            }, 500);
+        }, 900);
+    };
+    
+    $scope.selectAllPhotos = function() {
+        for(var i in $scope.photos) {
+            $scope.photos[i].selected = true;
+        }
+    };
+    
+    $scope.selectNoPhotos = function() {
+        for(var i in $scope.photos) {
+            $scope.photos[i].selected = false;
+        }
     };
 
 }
@@ -114,28 +170,39 @@ function MyPhotosCtrl($scope, $http, $timeout, $routeParams) {
 
     $scope.confirmAuth();
 
-    $timeout(function() {
-        var $c = $('#photos');
-        $c.imagesLoaded(function() {
-            $c.isotope({
-                itemSelector: '.span3',
-                masonry: {
-                    columnWidth: 300
-                }
+    $http.get('/me/photos').success(function(data) {
+        console.log(data);
+        $scope.photos = data.photos;
+        $timeout(function() {
+            var $c = $('#photos');
+            $c.imagesLoaded(function() {
+                $('#photos').fadeIn();
+                $c.isotope({
+                    itemSelector: '.span3',
+                    masonry: {
+                        columnWidth: 300
+                    }
+                });
+                $('#photos .span3').resizable({
+                    grid: 300,
+                    aspectRatio: true,
+                    start: function(event, ui) {
+                        $(this).css('z-index', 999);
+                    },
+                    stop: function(event, ui) {
+                        $(this).css('z-index', 2);
+                        $c.isotope('reLayout');
+                    }
+                });
+                //$('#photos .span3').each(function(){
+                //    $(this).zoomTarget({
+                //        closeclick: true
+                //    });
+                //});
+                $('.boxer').boxer();
             });
-            $('#photos .span3').each(function(){$(this).fadeIn()});
-            $('#photos .span3').resizable({
-                grid: 300,
-                aspectRatio: true,
-                start: function(event, ui) {
-                    $(this).css('z-index', 999);
-                },
-                stop: function(event, ui) {
-                    $(this).css('z-index', 2);
-                    $c.isotope('reLayout');
-                }
-            });
-        });
+        }, 500);
+    
     });
 
 }

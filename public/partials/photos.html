@@ -1,8 +1,13 @@
-<button type="button" class="btn btn-success btn-large" data-ng-click="importPhotos()">Import</button>
+<h2 id="buttons">Select Photos &nbsp; &nbsp;
+    <button type="button" class="btn btn-success btn-large" data-ng-click="importPhotos()">Done</button>
+    <button type="button" class="btn btn-primary" data-ng-click="selectAllPhotos()">Select All</button>
+    <button type="button" class="btn btn-primary" data-ng-click="selectNoPhotos()">Select None</button>
+</h2>
+<div><br/></div>
 
 <div>
-    <div id="photos" class="row">
-        <div class="span3 hero-unit" style="padding:25px;width:220px;display:none;" data-ng-class="{photoSelected: photo.selected}" 
+    <div id="photos" class="row" style="display:none;">
+        <div class="span3 hero-unit" style="padding:25px;width:220px;" data-ng-class="{photoSelected: photo.selected}" 
                 data-ng-repeat="photo in photos" data-ng-click="photo.selected = !photo.selected">
             <img data-ng-src="https://graph.facebook.com/{{photo.id}}/picture?access_token={{user.access_token}}" alt="" title="">
         </div>

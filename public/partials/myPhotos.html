@@ -1,8 +1,9 @@
 <div>
-    <div id="photos" class="row">
-        <div class="span3 hero-unit" style="padding:25px;width:220px;display:none;" data-ng-class="{photoSelected: photo.selected}" 
-                data-ng-repeat="photo in photos" data-ng-click="photo.selected = !photo.selected">
-            <img data-ng-src="https://graph.facebook.com/{{photo.id}}/picture?access_token={{user.access_token}}" alt="" title="">
+    <div id="photos" class="row" style="display:none;">
+        <div class="span3" style="padding-bottom:25px;width:270px;" data-ng-repeat="photo in photos">
+            <a href="{{photo.images[0].source}}" class="boxer">
+                <img data-ng-src="https://graph.facebook.com/{{photo.id}}/picture?access_token={{user.access_token}}" alt="" title="">
+            </a>
         </div>
     </div>
 </div>

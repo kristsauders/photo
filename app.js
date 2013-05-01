@@ -4,25 +4,32 @@ var express = require('express'),
     passport = require('passport'),
     FacebookStrategy = require('passport-facebook').Strategy,
     mongoose = require('mongoose'),
+    MongoStore = require('connect-mongo')(express),
     logentries = require('node-logentries'),
     log = logentries.logger({
         token:process.env.LOGENTRIES_TOKEN
     }),
     env,
-    mongourl;
+    mongourl,
+    callbackURL = 'http://photo.kristsauders.c9.io/auth/facebook/callback',
+    sessionStore;
     
-if(process.env.VCAP_SERVICES!=undefined) {
+if(process.env.VCAP_SERVICES!==undefined) {
     env = JSON.parse(process.env.VCAP_SERVICES);
     console.log(env);
     log.info(JSON.stringify(env));
-    mongourl = env['mongodb-1.8'][0]['credentials'];
+    mongourl = env['mongodb-1.8'][0].credentials;
+    callbackURL = 'http://photo.hp.af.cm/auth/facebook/callback';
+    sessionStore = new MongoStore({
+        db: 'photo',
+        auto_reconnect: true
+    });
 }
 
 passport.use(new FacebookStrategy({
     clientID: '241385652670782',
     clientSecret: '348a68ede0be7bf1102e492c58534a02',
-    callbackURL: 'http://photo.hp.af.cm/auth/facebook/callback'
-    //callbackURL: 'http://photo.kristsauders.c9.io/auth/facebook/callback'
+    callbackURL: callbackURL
   },
   function(accessToken, refreshToken, profile, done) {
     // Add access token to profile, to make it available to views
@@ -38,7 +45,10 @@ app.configure(function() {
   app.use(express.favicon());
   app.use(express.cookieParser());
   app.use(express.bodyParser());
-  app.use(express.session({ secret: 'keyboard cat' }));
+  app.use(express.session({ 
+        secret: 'keyboard cat',
+        store: sessionStore
+    }));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(app.router);
@@ -66,7 +76,7 @@ app.get('/', function(req, res) {
     //    console.log(kittens);
     //    log.log("debug", kittens);
     //});
-    if(req.user!=undefined) {
+    if(req.user!==undefined) {
         console.log('Pageload by user: ' + req.user.displayName);
         log.info("Pageload by user: " + req.user.displayName);
         req.user.authenticated = true;
@@ -86,26 +96,67 @@ var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 
-var kittySchema = mongoose.Schema({
-    name: String
+var photosSchema = mongoose.Schema({
+    user_id: String,
+    photos: [
+            {
+                id: String,
+                selected: Boolean,
+                images: [
+                        {
+                            height: Number,
+                            width: Number,
+                            source: String
+                        }
+                    ]
+            }
+        ]
 });
 
-kittySchema.methods.speak = function () {
-  var greeting = this.name
-    ? "Meow name is " + this.name
-    : "I don't have a name";
-  console.log(greeting);
+photosSchema.methods.speak = function () {
+  console.log('I belong to ' + this.user_id);
 };
 
-var Kitten = mongoose.model('Kitten', kittySchema);
+var Photos = mongoose.model('Photos', photosSchema);
 
-var fluffy = new Kitten({ name: 'fluffy' });
+//var fluffy = new Kitten({ name: 'fluffy' });
 //fluffy.speak();// "Meow name is fluffy"
 
 //fluffy.save(function (err, fluffy) {
 //  if (err){} // TODO handle the error
   //fluffy.speak();
 //});
+
+app.post('/me/photos', function(req, res) {
+    if(req.user===undefined)
+        res.send(401, 'You are not logged in.');
+    else {
+        console.log(req.body);
+        var photos = new Photos({ user_id: req.user.id, photos: req.body });
+        console.log(photos);
+        photos.save(function(err, photos) {
+            if(err) {
+                console.log(err);
+            }
+            console.log(photos);
+            res.send(req.body);
+        });
+    }
+});
+
+app.get('/me/photos', function(req, res) {
+    if(req.user===undefined)
+        res.send(401, 'You are not logged in.');
+    else {
+        Photos.find({user_id: req.user.id}, function(err,photos) {
+            if(err) {
+                console.log(err);
+            }
+            console.log(photos);
+            res.send(photos[photos.length-1]);
+        });
+    }
+});
 
 log.log("debug", {sleep:"all night", work:"all day"});
 
