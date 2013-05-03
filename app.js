@@ -6,7 +6,7 @@ var express = require('express'),
     mongoose = require('mongoose'),
     MongoStore = require('connect-mongo')(express),
     logentries = require('node-logentries'),
-    log = logentries.logger({
+    logentries = logentries.logger({
         token:process.env.LOGENTRIES_TOKEN
     }),
     env,
@@ -14,10 +14,16 @@ var express = require('express'),
     callbackURL = 'http://photo.kristsauders.c9.io/auth/facebook/callback',
     sessionStore;
     
+// Function to log to console and Logentries
+var log = function(message) {
+    console.log(message);
+    logentries.info(message);
+}
+    
+// If running on Cloud Foundry, set callback and mongodb connection
 if(process.env.VCAP_SERVICES!==undefined) {
     env = JSON.parse(process.env.VCAP_SERVICES);
-    console.log(env);
-    log.info(JSON.stringify(env));
+    log(env);
     mongourl = env['mongodb-1.8'][0].credentials;
     callbackURL = 'http://photo.hp.af.cm/auth/facebook/callback';
     sessionStore = new MongoStore({
@@ -26,6 +32,7 @@ if(process.env.VCAP_SERVICES!==undefined) {
     });
 }
 
+// Settings for Facebook authentication
 passport.use(new FacebookStrategy({
     clientID: '241385652670782',
     clientSecret: '348a68ede0be7bf1102e492c58534a02',
@@ -34,6 +41,7 @@ passport.use(new FacebookStrategy({
   function(accessToken, refreshToken, profile, done) {
     // Add access token to profile, to make it available to views
     profile.access_token = accessToken;
+    log(profile);
     return done(null, profile);
   }
 ));
@@ -46,7 +54,7 @@ app.configure(function() {
   app.use(express.cookieParser());
   app.use(express.bodyParser());
   app.use(express.session({ 
-        secret: 'keyboard cat',
+        secret: 'This is a huge secret...',
         store: sessionStore
     }));
   app.use(passport.initialize());
@@ -63,39 +71,51 @@ passport.deserializeUser(function(id, done) {
   done(null, id);
 });
 
+// This route redirects to Facebook for login
 app.get('/auth/facebook',
   passport.authenticate('facebook', { scope: ['user_photos', 'publish_actions'] })
 );
 
+// This is the callback from Facebook, and will redirect to the main app page
 app.get('/auth/facebook/callback', 
   passport.authenticate('facebook', { successRedirect: '/',
                                       failureRedirect: '/login' }));
 
+// The main single page app
 app.get('/', function(req, res) {
     //Kitten.find({ name: "fluffy" }, function(err,kittens){
     //    console.log(kittens);
     //    log.log("debug", kittens);
     //});
     if(req.user!==undefined) {
-        console.log('Pageload by user: ' + req.user.displayName);
-        log.info("Pageload by user: " + req.user.displayName);
+        log('Pageload by user: ' + req.user.displayName);
         req.user.authenticated = true;
         res.render('index', { user: req.user });
     } else {
+        log('Pageload by unauthenticated user');
         res.render('index', { user: { authenticated: false } } );
     }
 });
 
+// Logout from the app, and redirect to main page
 app.get('/auth/logout', function(req, res) {
+    if(req.user!==undefined){
+        log('Logout by user: ' + req.user.displayName);
+    }
     req.logout();
     res.redirect('/');
 });
 
+// AppFog automatically replaces this url
 mongoose.connect('mongodb://localhost/test');
 var db = mongoose.connection;
 
-db.on('error', console.error.bind(console, 'connection error:'));
+// Log mongodb connection errors
+db.on('error', function(err){
+    log('Error connecting to mongodb: ' + err);
+});
 
+// Experimental schema for storing photo album
 var photosSchema = mongoose.Schema({
     user_id: String,
     photos: [
@@ -113,8 +133,9 @@ var photosSchema = mongoose.Schema({
         ]
 });
 
+// Just showing how to add a method to a mongoose schema
 photosSchema.methods.speak = function () {
-  console.log('I belong to ' + this.user_id);
+  log('I belong to ' + this.user_id);
 };
 
 var Photos = mongoose.model('Photos', photosSchema);
@@ -127,39 +148,38 @@ var Photos = mongoose.model('Photos', photosSchema);
   //fluffy.speak();
 //});
 
+// Save a new photo album, still early stage
 app.post('/me/photos', function(req, res) {
     if(req.user===undefined)
         res.send(401, 'You are not logged in.');
     else {
-        console.log(req.body);
         var photos = new Photos({ user_id: req.user.id, photos: req.body });
-        console.log(photos);
+        log(photos);
         photos.save(function(err, photos) {
             if(err) {
-                console.log(err);
+                log(err);
             }
-            console.log(photos);
+            log('Successfully saved photos to mongodb');
             res.send(req.body);
         });
     }
 });
 
+// Returns JSON with most recent photo album the user saved
 app.get('/me/photos', function(req, res) {
     if(req.user===undefined)
         res.send(401, 'You are not logged in.');
     else {
         Photos.find({user_id: req.user.id}, function(err,photos) {
             if(err) {
-                console.log(err);
+                log(err);
             }
-            console.log(photos);
+            log(photos);
             res.send(photos[photos.length-1]);
         });
     }
 });
 
-log.log("debug", {sleep:"all night", work:"all day"});
-
 // Initialize server
 app.listen(port);
-console.log('Listening on port ' + port);
+log('Restarted app. Listening on port ' + port);
