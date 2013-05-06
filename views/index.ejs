@@ -32,17 +32,32 @@
             .photoSelected {
                 background: green;
             }
+            .ui-rotatable-handle 
+            {
+                background: #f5dc58;
+                border: 1px solid #FFF;
+                border-radius: 5px;
+                -moz-border-radius: 5px;
+                -o-border-radius: 5px;
+                -webkit-border-radius: 5px;
+                cursor: pointer;
+                
+                height:        10px;
+                left:          50%;
+                margin:        0 0 0 -5px;
+                position:      absolute;
+                bottom:           -5px;
+                width:         10px;
+            }
         </style>
+        
+        <!-- External Scripts -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.min.js"></script>
         <script src="/js/bootstrap.min.js"></script>
-        <script src="/js/ui-bootstrap-tpls-0.2.0.min.js"></script>
         <script src="/js/jquery.isotope.min.js"></script>
-        <script src="/js/jquery.zoomooz.min.js"></script>
-        <script src="/js/jquery.shapeshift.min.js"></script>
         <script src="/js/jquery.ui.rotatable.js"></script>
-        <script src="/js/jquery.fullscreen.min.js"></script>
         <script src="/js/jquery.boxer.min.js"></script>
         <script src="/js/jquery.ui.touch-punch.min.js"></script>
         
@@ -68,7 +83,8 @@
               <div class="nav-collapse collapse">
                 <ul class="nav">
                   <li class="active"><a href="#/">Home</a></li>
-                  <li><a href="#/albums">Albums</a></li>
+                  <li><a href="#/facebook/albums">Albums</a></li>
+                  <li><a href="#/me/photos">My Photos</a></li>
                   <!--
                       <li><a href="#">Other</a></li>
                       <li class="dropdown">
@@ -111,7 +127,7 @@
           </div>
         </div>
         
-        <div data-ng-view data-ng-animate="{enter: 'view-enter', leave: 'view-leave'}"></div>
+        <div data-ng-view></div>
     
     </body>
 </html>

@@ -1,8 +1,8 @@
 <div>
-    <div id="albums" class="row" style="display:none;">
-        <div class="span3 hero-unit" style="padding:25px;width:220px;" data-ng-repeat="album in albums">
+    <div id="albums" class="row" style="display:none;margin-left:0px;">
+        <div class="span3 hero-unit" style="padding:15px;width:220px;margin-left:10px;margin-bottom:10px;" data-ng-repeat="album in albums">
             <h4>{{album.name}}{{imagesLoaded}}</h4>
-            <a href="#/albums/{{album.id}}/photos"><img data-ng-src="https://graph.facebook.com/{{album.cover_photo}}/picture?access_token={{user.access_token}}" alt="" title=""></a>
+            <a href="#/facebook/albums/{{album.id}}/photos"><img data-ng-src="https://graph.facebook.com/{{album.cover_photo}}/picture?access_token={{user.access_token}}" alt="" title=""></a>
         </div>
     </div>
 </div>

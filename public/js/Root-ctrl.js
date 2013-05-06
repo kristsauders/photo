@@ -5,11 +5,11 @@ config(['$routeProvider', function($routeProvider) {
         templateUrl: 'partials/login.html',
         controller: RootCtrl
     }).
-    when('/albums', {
+    when('/facebook/albums', {
         templateUrl: 'partials/albums.html',
         controller: AlbumsCtrl
     }).
-    when('/albums/:albumId/photos', {
+    when('/facebook/albums/:albumId/photos', {
         templateUrl: 'partials/photos.html',
         controller: PhotosCtrl
     }).
@@ -63,7 +63,7 @@ function AlbumsCtrl($scope, $http, $timeout) {
                 $c.isotope({
                     itemSelector: '.span3',
                     masonry: {
-                        columnWidth: 300
+                        columnWidth: 260
                     }
                 });
             });
@@ -105,7 +105,7 @@ function PhotosCtrl($scope, $http, $timeout, $routeParams) {
                 $c.isotope({
                     itemSelector: '.span3',
                     masonry: {
-                        columnWidth: 300
+                        columnWidth: 260
                     }
                 });
             });
@@ -180,7 +180,7 @@ function MyPhotosCtrl($scope, $http, $timeout, $routeParams) {
                 $c.isotope({
                     itemSelector: '.span3',
                     masonry: {
-                        columnWidth: 300
+                        columnWidth: 260
                     }
                 });
                 $('#photos .span3').resizable({
@@ -194,6 +194,7 @@ function MyPhotosCtrl($scope, $http, $timeout, $routeParams) {
                         $c.isotope('reLayout');
                     }
                 });
+                $('#photos .span3').rotatable();
                 //$('#photos .span3').each(function(){
                 //    $(this).zoomTarget({
                 //        closeclick: true

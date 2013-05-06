@@ -6,8 +6,8 @@
 <div><br/></div>
 
 <div>
-    <div id="photos" class="row" style="display:none;">
-        <div class="span3 hero-unit" style="padding:25px;width:220px;" data-ng-class="{photoSelected: photo.selected}" 
+    <div id="photos" class="row" style="display:none;margin-left:0px;">
+        <div class="span3 hero-unit" style="padding:15px;width:220px;margin-left:10px;margin-bottom:10px;" data-ng-class="{photoSelected: photo.selected}" 
                 data-ng-repeat="photo in photos" data-ng-click="photo.selected = !photo.selected">
             <img data-ng-src="https://graph.facebook.com/{{photo.id}}/picture?access_token={{user.access_token}}" alt="" title="">
         </div>
