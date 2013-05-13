@@ -81,7 +81,7 @@ function AlbumsCtrl($scope, $http, $timeout) {
                 $c.isotope({
                     itemSelector: '.span3',
                     masonry: {
-                        columnWidth: 260
+                        columnWidth: 65
                     }
                 });
             });
@@ -156,7 +156,7 @@ function PhotosCtrl($scope, $http, $timeout, $routeParams) {
                 $c.isotope({
                     itemSelector: '.span3',
                     masonry: {
-                        columnWidth: 260
+                        columnWidth: 65
                     }
                 });
             });
@@ -192,10 +192,10 @@ function PhotosCtrl($scope, $http, $timeout, $routeParams) {
     getPage(url);
     
     $scope.importPhotos = function() {
-        $('#photos').isotope({filter: '.photoSelected'});
-        $timeout(function(){
-            $('#photos').fadeOut();
-            $('h2#buttons').fadeOut();
+        //$('#photos').isotope({filter: '.photoSelected'});
+        //$timeout(function(){
+            //$('#photos').fadeOut();
+            //$('h2#buttons').fadeOut();
             var photos = $scope.photos;
             var selectedPhotos = [];
             for(var i in photos) {
@@ -208,8 +208,8 @@ function PhotosCtrl($scope, $http, $timeout, $routeParams) {
             $scope.$parent.photos = selectedPhotos;
             $timeout(function(){
                 $scope.changeHash('/me/photos');
-            }, 500);
-        }, 900);
+            }, 900);
+        //}, 900);
     };
     
     $scope.selectAllPhotos = function() {
@@ -250,6 +250,8 @@ function MyPhotosCtrl($scope, $http, $timeout, $routeParams) {
     console.log('MyPhotosCtrl');
 
     $scope.confirmAuth();
+    
+    $scope.photos = [];
 
     $http.get('/me/photos').success(function(data) {
         console.log(data);
@@ -261,11 +263,11 @@ function MyPhotosCtrl($scope, $http, $timeout, $routeParams) {
                 $c.isotope({
                     itemSelector: '.span3',
                     masonry: {
-                        columnWidth: 260
+                        columnWidth: 65
                     }
                 });
                 $('#photos .span3').resizable({
-                    grid: 300,
+                    //grid: 130,
                     aspectRatio: true,
                     start: function(event, ui) {
                         $(this).css('z-index', 999);
@@ -275,7 +277,7 @@ function MyPhotosCtrl($scope, $http, $timeout, $routeParams) {
                         $c.isotope('reLayout');
                     }
                 });
-                $('#photos .span3').rotatable();
+                //$('#photos .span3').rotatable();
                 //$('#photos .span3').each(function(){
                 //    $(this).zoomTarget({
                 //        closeclick: true
