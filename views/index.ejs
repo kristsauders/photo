@@ -50,6 +50,18 @@
                 bottom:           -5px;
                 width:         10px;
             }
+            .album:hover {
+                background: #ccc;
+            }
+            .photo:not(.photoSelected):hover {
+                background: #ccc;
+            }
+            .loading {
+                margin-left: 35%;
+                margin-right: 35%;
+                margin-top: 50px;
+                width: 30%;
+            }
         </style>
         
         <!-- External Scripts -->
@@ -128,7 +140,7 @@
           </div>
         </div>
         
-        <div data-ng-view></div>
+        <div data-ng-view id="view"></div>
     
     </body>
 </html>

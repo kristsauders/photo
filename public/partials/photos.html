@@ -6,10 +6,15 @@
 <div><br/></div>
 
 <div>
-    <div id="photos" class="row" style="display:none;margin-left:0px;">
-        <div class="span3 hero-unit" style="padding:15px;width:220px;margin-left:10px;margin-bottom:10px;" data-ng-class="{photoSelected: photo.selected}" 
+    <!--<img src="/img/loading.gif" class="loading" />-->
+    <h2 class="loading">Loading...</h2>
+    <div id="photos" class="row" style="margin-left:0px;">
+        <div class="span3 hero-unit photo" style="display:none;padding:15px;width:220px;margin-left:10px;margin-bottom:10px;" data-ng-class="{photoSelected: photo.selected}" 
                 data-ng-repeat="photo in photos" data-ng-click="photo.selected = !photo.selected">
             <img data-ng-src="https://graph.facebook.com/{{photo.id}}/picture?access_token={{user.access_token}}" alt="" title="">
         </div>
     </div>
+    <button type="button" class="btn btn-large btn-primary pull-right" 
+            data-ng-show="false" style="margin:25px;" data-ng-class="{clickable: nextPage!==undefined}"
+            data-ng-click="getNextPage()" id="loadMoreButton">Load More</button>
 </div>

@@ -22,7 +22,7 @@ config(['$routeProvider', function($routeProvider) {
     });
 }]);
 
-function RootCtrl($scope, $location) {
+function RootCtrl($scope, $location, $timeout) {
 
     $scope.testVar = "krists";
 
@@ -41,11 +41,26 @@ function RootCtrl($scope, $location) {
     $scope.confirmAuth();
     
     $scope.changeHash = function(hash) {
+        console.log('changing hash to: ' + hash);
         $location.path(hash);
     };
+    
+    $scope.$on('$locationChangeStart', function(event, next, current) {
+        if($('#view').css('display') != 'none' && current !== next) {
+            event.preventDefault();
+        }
+        $('#view').fadeOut(500);
+        $timeout(function(){
+            $location.path(next.split('#').pop());
+        }, 500);
+    });
+    
+    $scope.$on('$routeChangeSuccess', function (scope, next, current) {
+        $('#view').fadeIn(500);
+    });
 
 }
-RootCtrl.$inject = ['$scope', '$location'];
+RootCtrl.$inject = ['$scope', '$location', '$timeout'];
 
 function AlbumsCtrl($scope, $http, $timeout) {
 
@@ -54,12 +69,15 @@ function AlbumsCtrl($scope, $http, $timeout) {
     $scope.confirmAuth();
     
     $scope.albums = [];
+    
+    var page = 0;
 
-    var init = function() {
+    function init() {
         $timeout(function() {
             var $c = $('#albums');
             $c.imagesLoaded(function() {
-                $c.fadeIn();
+                $('.loading').fadeOut(100);
+                $('#albums .span3').fadeIn(500);
                 $c.isotope({
                     itemSelector: '.span3',
                     masonry: {
@@ -68,23 +86,53 @@ function AlbumsCtrl($scope, $http, $timeout) {
                 });
             });
         });
-    };
+    }
     
-    var getPage = function(pageUrl) {
+    function getPage(pageUrl) {
+        pageUrl += "&callback=JSON_CALLBACK";
         $http.jsonp(pageUrl).success(function(data) {
             console.log(data);
+            page += 1;
             $scope.albums.push.apply($scope.albums, data.data);
-            if(data.paging.next!==undefined) {
-                getPage(data.paging.next + '&callback=JSON_CALLBACK');
-            } else {
+            $scope.nextPage = data.paging.next;
+            if(page===1) {
                 init();
+            } else {
+                $timeout(function(){
+                    $('#albums').imagesLoaded(function(){
+                        $("#albums .span3:not('.isotope-item')").show();
+                        $('#albums').isotope('appended', $("#albums .span3:not('.isotope-item')"));
+                    });
+                });
             }
         });
+    }
+    
+    $scope.getNextPage = function() {
+        getPage($scope.nextPage);
     };
 
-    var url = "https://graph.facebook.com/me/albums?limit=500&fields=id,name,cover_photo&callback=JSON_CALLBACK&access_token=" + $scope.user.access_token;
+    var url = "https://graph.facebook.com/me/albums?limit=25&fields=id,name,count,cover_photo&access_token=" + $scope.user.access_token;
 
     getPage(url);
+    
+    var killScroll = false;
+    $(window).scroll(function(){
+            if  ($(window).scrollTop() >= ($(document).height() - ($(window).height()))){
+                    if (!killScroll) {
+                        killScroll = true;
+                        if($('#loadMoreButton').hasClass('clickable')) {
+                            $('#loadMoreButton').click();
+                        }
+                    }
+            } else {
+                if(killScroll) {
+                    $timeout(function(){
+                        killScroll = false;
+                    }, 1000);
+                }
+            }
+    });
 
 }
 AlbumsCtrl.$inject = ['$scope', '$http', '$timeout'];
@@ -96,12 +144,15 @@ function PhotosCtrl($scope, $http, $timeout, $routeParams) {
     $scope.confirmAuth();
     
     $scope.photos = [];
+    
+    var page = 0;
 
-    var init = function() {
+    function init() {
         $timeout(function() {
             var $c = $('#photos');
             $c.imagesLoaded(function() {
-                $c.fadeIn();
+                $('.loading').fadeOut(100);
+                $('#photos .span3').fadeIn(500);
                 $c.isotope({
                     itemSelector: '.span3',
                     masonry: {
@@ -110,21 +161,33 @@ function PhotosCtrl($scope, $http, $timeout, $routeParams) {
                 });
             });
         });
-    };
+    }
     
-    var getPage = function(pageUrl) {
+    function getPage(pageUrl) {
+        pageUrl += "&callback=JSON_CALLBACK";
         $http.jsonp(pageUrl).success(function(data) {
             console.log(data);
+            page += 1;
             $scope.photos.push.apply($scope.photos, data.data);
-            if(data.paging.next!==undefined) {
-                getPage(data.paging.next + '&callback=JSON_CALLBACK');
-            } else {
+            $scope.nextPage = data.paging.next;
+            if(page===1) {
                 init();
+            } else {
+                $timeout(function(){
+                    $('#photos').imagesLoaded(function(){
+                        $("#photos .span3:not('.isotope-item')").show();
+                        $('#photos').isotope('appended', $("#photos .span3:not('.isotope-item')"));
+                    });
+                });
             }
         });
+    }
+    
+    $scope.getNextPage = function() {
+        getPage($scope.nextPage);
     };
 
-    var url = "https://graph.facebook.com/" + $routeParams.albumId + "/photos?limit=500&fields=id,images&callback=JSON_CALLBACK&access_token=" + $scope.user.access_token;
+    var url = "https://graph.facebook.com/" + $routeParams.albumId + "/photos?limit=25&fields=id,images&access_token=" + $scope.user.access_token;
     
     getPage(url);
     
@@ -160,6 +223,24 @@ function PhotosCtrl($scope, $http, $timeout, $routeParams) {
             $scope.photos[i].selected = false;
         }
     };
+    
+    var killScroll = false;
+    $(window).scroll(function(){
+            if  ($(window).scrollTop() >= ($(document).height() - ($(window).height()))){
+                    if (!killScroll) {
+                        killScroll = true;
+                        if($('#loadMoreButton').hasClass('clickable')) {
+                            $('#loadMoreButton').click();
+                        }
+                    }
+            } else {
+                if(killScroll) {
+                    $timeout(function(){
+                        killScroll = false;
+                    }, 1000);
+                }
+            }
+    });
 
 }
 PhotosCtrl.$inject = ['$scope', '$http', '$timeout', '$routeParams'];
