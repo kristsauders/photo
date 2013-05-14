@@ -18,11 +18,11 @@ config(['$routeProvider', function($routeProvider) {
         controller: MyPhotosCtrl
     }).
     when('/me/albums', {
-        templateUrl: 'partials/myAlbums.html',
+        templateUrl: 'partials/albums.html',
         controller: MyAlbumsCtrl
     }).
     when('/me/albums/:albumId/photos', {
-        templateUrl: 'partials/myAlbumPhotos.html',
+        templateUrl: 'partials/myPhotos.html',
         controller: MyAlbumPhotosCtrl
     }).
     otherwise({
