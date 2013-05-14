@@ -55,7 +55,8 @@ app.configure(function() {
   app.use(express.bodyParser());
   app.use(express.session({ 
         secret: 'This is a huge secret...',
-        store: sessionStore
+        store: sessionStore,
+        cookie: { maxAge: 2592000000 }
     }));
   app.use(passport.initialize());
   app.use(passport.session());
