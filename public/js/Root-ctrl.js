@@ -45,7 +45,9 @@ function RootCtrl($scope, $location, $timeout) {
         $location.path(hash);
     };
     
+    // Animate view fading out before changing route
     $scope.$on('$locationChangeStart', function(event, next, current) {
+        // Prevent route change if view is still visible or this is initial page load
         if($('#view').css('display') != 'none' && current !== next) {
             event.preventDefault();
         }
@@ -55,8 +57,28 @@ function RootCtrl($scope, $location, $timeout) {
         }, 500);
     });
     
+    // Animate view fading in on route change success
     $scope.$on('$routeChangeSuccess', function (scope, next, current) {
         $('#view').fadeIn(500);
+    });
+    
+    // Trigger loading of next page on scroll to bottom
+    var killScroll = false;
+    $(window).scroll(function(){
+            if  ($(window).scrollTop() >= ($(document).height() - ($(window).height()))){
+                    if (!killScroll) {
+                        killScroll = true;
+                        if($('#loadMoreButton').hasClass('clickable')) {
+                            $('#loadMoreButton').click();
+                        }
+                    }
+            } else {
+                if(killScroll) {
+                    $timeout(function(){
+                        killScroll = false;
+                    }, 1000);
+                }
+            }
     });
 
 }
@@ -115,24 +137,6 @@ function AlbumsCtrl($scope, $http, $timeout) {
     var url = "https://graph.facebook.com/me/albums?limit=25&fields=id,name,count,cover_photo&access_token=" + $scope.user.access_token;
 
     getPage(url);
-    
-    var killScroll = false;
-    $(window).scroll(function(){
-            if  ($(window).scrollTop() >= ($(document).height() - ($(window).height()))){
-                    if (!killScroll) {
-                        killScroll = true;
-                        if($('#loadMoreButton').hasClass('clickable')) {
-                            $('#loadMoreButton').click();
-                        }
-                    }
-            } else {
-                if(killScroll) {
-                    $timeout(function(){
-                        killScroll = false;
-                    }, 1000);
-                }
-            }
-    });
 
 }
 AlbumsCtrl.$inject = ['$scope', '$http', '$timeout'];
@@ -223,24 +227,6 @@ function PhotosCtrl($scope, $http, $timeout, $routeParams) {
             $scope.photos[i].selected = false;
         }
     };
-    
-    var killScroll = false;
-    $(window).scroll(function(){
-            if  ($(window).scrollTop() >= ($(document).height() - ($(window).height()))){
-                    if (!killScroll) {
-                        killScroll = true;
-                        if($('#loadMoreButton').hasClass('clickable')) {
-                            $('#loadMoreButton').click();
-                        }
-                    }
-            } else {
-                if(killScroll) {
-                    $timeout(function(){
-                        killScroll = false;
-                    }, 1000);
-                }
-            }
-    });
 
 }
 PhotosCtrl.$inject = ['$scope', '$http', '$timeout', '$routeParams'];
