@@ -32,7 +32,7 @@ config(['$routeProvider', function($routeProvider) {
 
 function RootCtrl($scope, $location, $timeout) {
 
-    $scope.testVar = "krists";
+    $scope.$location = $location;
 
     $scope.user = user;
 
