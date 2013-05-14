@@ -17,6 +17,14 @@ config(['$routeProvider', function($routeProvider) {
         templateUrl: 'partials/myPhotos.html',
         controller: MyPhotosCtrl
     }).
+    when('/me/albums', {
+        templateUrl: 'partials/myAlbums.html',
+        controller: MyAlbumsCtrl
+    }).
+    when('/me/albums/:albumId/photos', {
+        templateUrl: 'partials/myAlbumPhotos.html',
+        controller: MyAlbumPhotosCtrl
+    }).
     otherwise({
         redirectTo: '/'
     });
