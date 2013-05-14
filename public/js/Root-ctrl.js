@@ -284,4 +284,118 @@ function MyPhotosCtrl($scope, $http, $timeout, $routeParams) {
     });
 
 }
-PhotosCtrl.$inject = ['$scope', '$http', '$timeout', '$routeParams'];
+MyPhotosCtrl.$inject = ['$scope', '$http', '$timeout', '$routeParams'];
+
+function MyAlbumsCtrl($scope, $http, $timeout) {
+
+    console.log('MyAlbumsCtrl');
+
+    $scope.confirmAuth();
+    
+    $scope.albums = [];
+    
+    var page = 0;
+
+    function init() {
+        $timeout(function() {
+            var $c = $('#albums');
+            $c.imagesLoaded(function() {
+                $('.loading').fadeOut(100);
+                $('#albums .span3').fadeIn(500);
+                $c.isotope({
+                    itemSelector: '.span3',
+                    masonry: {
+                        columnWidth: 65
+                    }
+                });
+            });
+        });
+    }
+    
+    function getPage(pageUrl) {
+        pageUrl += "&callback=JSON_CALLBACK";
+        $http.jsonp(pageUrl).success(function(data) {
+            console.log(data);
+            page += 1;
+            $scope.albums.push.apply($scope.albums, data.data);
+            $scope.nextPage = data.paging.next;
+            if(page===1) {
+                init();
+            } else {
+                $timeout(function(){
+                    $('#albums').imagesLoaded(function(){
+                        $("#albums .span3:not('.isotope-item')").show();
+                        $('#albums').isotope('appended', $("#albums .span3:not('.isotope-item')"));
+                    });
+                });
+            }
+        });
+    }
+    
+    $scope.getNextPage = function() {
+        getPage($scope.nextPage);
+    };
+
+    var url = "https://graph.facebook.com/me/albums?limit=25&fields=id,name,count,cover_photo&access_token=" + $scope.user.access_token;
+
+    getPage(url);
+
+}
+MyAlbumsCtrl.$inject = ['$scope', '$http', '$timeout'];
+
+function MyAlbumPhotosCtrl($scope, $http, $timeout, $routeParams) {
+
+    console.log('MyAlbumPhotosCtrl');
+
+    $scope.confirmAuth();
+    
+    $scope.photos = [];
+    
+    var page = 0;
+
+    function init() {
+        $timeout(function() {
+            var $c = $('#photos');
+            $c.imagesLoaded(function() {
+                $('.loading').fadeOut(100);
+                $('#photos .span3').fadeIn(500);
+                $c.isotope({
+                    itemSelector: '.span3',
+                    masonry: {
+                        columnWidth: 65
+                    }
+                });
+            });
+        });
+    }
+    
+    function getPage(pageUrl) {
+        pageUrl += "&callback=JSON_CALLBACK";
+        $http.jsonp(pageUrl).success(function(data) {
+            console.log(data);
+            page += 1;
+            $scope.photos.push.apply($scope.photos, data.data);
+            $scope.nextPage = data.paging.next;
+            if(page===1) {
+                init();
+            } else {
+                $timeout(function(){
+                    $('#photos').imagesLoaded(function(){
+                        $("#photos .span3:not('.isotope-item')").show();
+                        $('#photos').isotope('appended', $("#photos .span3:not('.isotope-item')"));
+                    });
+                });
+            }
+        });
+    }
+    
+    $scope.getNextPage = function() {
+        getPage($scope.nextPage);
+    };
+
+    var url = "https://graph.facebook.com/" + $routeParams.albumId + "/photos?limit=25&fields=id,images&access_token=" + $scope.user.access_token;
+    
+    getPage(url);
+
+}
+MyAlbumPhotosCtrl.$inject = ['$scope', '$http', '$timeout', '$routeParams'];
