@@ -134,6 +134,56 @@ var photosSchema = mongoose.Schema({
         ]
 });
 
+var photoSchema = mongoose.Schema({
+    height: Number,
+    width: Number,
+    id: Number,
+    source: String,
+    albumId: Number
+})
+
+// Experimental schema for storing photo album
+var albumSchema = mongoose.Schema({
+    user_id: String,
+    id: String,
+    name: String
+});
+
+var Album = mongoose.model('Album', albumSchema);
+var Photo = mongoose.model('Photo', photoSchema);
+
+// Save a new album, still early stage
+app.post('/me/albums', function(req, res) {
+    if(req.user===undefined)
+        res.send(401, 'You are not logged in.');
+    else {
+        var album = new Album({ user_id: req.user.id });
+        log(album);
+        album.save(function(err, album) {
+            if(err) {
+                log(err);
+            }
+            log('Successfully saved album to mongodb');
+            res.send(req.body);
+        });
+    }
+});
+
+// Returns JSON with user's albums
+app.get('/me/albums', function(req, res) {
+    if(req.user===undefined)
+        res.send(401, 'You are not logged in.');
+    else {
+        Album.find({user_id: req.user.id}, function(err,albums) {
+            if(err) {
+                log(err);
+            }
+            log(albums);
+            res.send(albums);
+        });
+    }
+});
+
 // Just showing how to add a method to a mongoose schema
 photosSchema.methods.speak = function () {
   log('I belong to ' + this.user_id);
