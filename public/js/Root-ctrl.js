@@ -366,7 +366,7 @@ function MyAlbumPhotosCtrl($scope, $http, $timeout, $routeParams) {
     function init() {
         $timeout(function() {
             var $c = $('#photos');
-            $c.imagesLoaded(function() {
+            //$c.imagesLoaded(function() {
                 $('.loading').fadeOut(100);
                 $('#photos .span3').fadeIn(500);
                 $c.isotope({
@@ -375,7 +375,7 @@ function MyAlbumPhotosCtrl($scope, $http, $timeout, $routeParams) {
                     //    columnWidth: 65
                     //}
                 });
-            });
+            //});
         });
     }
     
@@ -423,7 +423,8 @@ function NewAlbumCtrl($scope, $http, $timeout) {
         $http.post('/me/albums', { name: name }).success(function(data) {
             console.log(data);
             if(data.id !== null) {
-                $scope.changeHash('/me/albums/' + data.id + '/photos');
+                //$scope.changeHash('/me/albums/' + data.id + '/photos');
+                $scope.changeHash('/me/albums');
             }
         });
     };

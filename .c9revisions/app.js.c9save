@@ -90,3 +90,4 @@
 {"ts":1368926243358,"patch":[[{"diffs":[[0," * 90000"],[1,"00000000"],[0,") + 1000"]],"start1":4652,"start2":4652,"length1":16,"length2":24}]],"length":6760,"saved":false}
 {"ts":1368926349954,"patch":[[{"diffs":[[0,".');\n    else {\n"],[1,"        // Generate random id for album\n"],[0,"        var id ="]],"start1":4595,"start2":4595,"length1":32,"length2":72}]],"length":6800,"saved":false}
 {"ts":1368927356067,"patch":[[{"diffs":[[0,"es.send("],[1,"{ data: "],[0,"albums"],[1," }"],[0,");\n     "]],"start1":5370,"start2":5370,"length1":22,"length2":32}]],"length":6810,"saved":false}
+{"ts":1368929114324,"patch":[[{"diffs":[[0,": albums"],[1,", paging: {}"],[0," });\n   "]],"start1":5384,"start2":5384,"length1":16,"length2":28}]],"length":6822,"saved":false}

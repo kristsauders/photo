@@ -184,7 +184,7 @@ app.get('/me/albums', function(req, res) {
                 log(err);
             }
             log(albums);
-            res.send({ data: albums });
+            res.send({ data: albums, paging: {} });
         });
     }
 });
