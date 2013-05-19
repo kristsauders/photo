@@ -2,8 +2,11 @@ var photo = angular.module('photo', []).
 config(['$routeProvider', function($routeProvider) {
     $routeProvider.
     when('/', {
-        templateUrl: 'partials/login.html',
-        controller: RootCtrl
+        templateUrl: 'partials/albums.html',
+        controller: MyAlbumsCtrl
+    }).
+    when('/login', {
+        templateUrl: 'partials/login.html'
     }).
     when('/facebook/albums', {
         templateUrl: 'partials/albums.html',
@@ -21,6 +24,10 @@ config(['$routeProvider', function($routeProvider) {
         templateUrl: 'partials/albums.html',
         controller: MyAlbumsCtrl
     }).
+    when('/me/albums/new', {
+        templateUrl: 'partials/newAlbum.html',
+        controller: NewAlbumCtrl
+    }).
     when('/me/albums/:albumId/photos', {
         templateUrl: 'partials/myPhotos.html',
         controller: MyAlbumPhotosCtrl
@@ -30,9 +37,10 @@ config(['$routeProvider', function($routeProvider) {
     });
 }]);
 
-function RootCtrl($scope, $location, $timeout) {
+function RootCtrl($scope, $location, $timeout, $routeProvider) {
 
     $scope.$location = $location;
+    $scope.$route = $routeProvider;
 
     $scope.user = user;
 
@@ -42,7 +50,7 @@ function RootCtrl($scope, $location, $timeout) {
     $scope.confirmAuth = function() {
         if ($scope.user.authenticated) {}
         else {
-            $location.path('/');
+            $location.path('/login');
         }
     };
 
@@ -93,7 +101,7 @@ function RootCtrl($scope, $location, $timeout) {
     (function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone")
 
 }
-RootCtrl.$inject = ['$scope', '$location', '$timeout'];
+RootCtrl.$inject = ['$scope', '$location', '$timeout', '$route'];
 
 function AlbumsCtrl($scope, $http, $timeout) {
 
@@ -113,9 +121,9 @@ function AlbumsCtrl($scope, $http, $timeout) {
                 $('#albums .span3').fadeIn(500);
                 $c.isotope({
                     itemSelector: '.span3',
-                    masonry: {
-                        columnWidth: 65
-                    }
+                    //masonry: {
+                    //    columnWidth: 65
+                    //}
                 });
             });
         });
@@ -170,9 +178,9 @@ function PhotosCtrl($scope, $http, $timeout, $routeParams) {
                 $('#photos .span3').fadeIn(500);
                 $c.isotope({
                     itemSelector: '.span3',
-                    masonry: {
-                        columnWidth: 65
-                    }
+                    //masonry: {
+                    //    columnWidth: 65
+                    //}
                 });
             });
         });
@@ -256,12 +264,12 @@ function MyPhotosCtrl($scope, $http, $timeout, $routeParams) {
         $timeout(function() {
             var $c = $('#photos');
             $c.imagesLoaded(function() {
-                $('#photos').fadeIn();
+                $('#photos .span3').fadeIn(500);
                 $c.isotope({
                     itemSelector: '.span3',
-                    masonry: {
-                        columnWidth: 65
-                    }
+                    //masonry: {
+                    //    columnWidth: 65
+                    //}
                 });
                 $('#photos .span3').resizable({
                     //grid: 130,
@@ -307,17 +315,16 @@ function MyAlbumsCtrl($scope, $http, $timeout) {
                 $('#albums .span3').fadeIn(500);
                 $c.isotope({
                     itemSelector: '.span3',
-                    masonry: {
-                        columnWidth: 65
-                    }
+                    //masonry: {
+                    //    columnWidth: 65
+                    //}
                 });
             });
         });
     }
     
     function getPage(pageUrl) {
-        pageUrl += "&callback=JSON_CALLBACK";
-        $http.jsonp(pageUrl).success(function(data) {
+        $http.get(pageUrl).success(function(data) {
             console.log(data);
             page += 1;
             $scope.albums.push.apply($scope.albums, data.data);
@@ -339,7 +346,7 @@ function MyAlbumsCtrl($scope, $http, $timeout) {
         getPage($scope.nextPage);
     };
 
-    var url = "https://graph.facebook.com/me/albums?limit=25&fields=id,name,count,cover_photo&access_token=" + $scope.user.access_token;
+    var url = "/me/albums";
 
     getPage(url);
 
@@ -364,9 +371,9 @@ function MyAlbumPhotosCtrl($scope, $http, $timeout, $routeParams) {
                 $('#photos .span3').fadeIn(500);
                 $c.isotope({
                     itemSelector: '.span3',
-                    masonry: {
-                        columnWidth: 65
-                    }
+                    //masonry: {
+                    //    columnWidth: 65
+                    //}
                 });
             });
         });
@@ -402,3 +409,24 @@ function MyAlbumPhotosCtrl($scope, $http, $timeout, $routeParams) {
 
 }
 MyAlbumPhotosCtrl.$inject = ['$scope', '$http', '$timeout', '$routeParams'];
+
+function NewAlbumCtrl($scope, $http, $timeout) {
+
+    console.log('NewAlbumCtrl');
+
+    $scope.confirmAuth();
+    
+    $('#albumName').focus();
+    
+    $scope.createAlbum = function(name) {
+        console.log('Creating album: ' + name);
+        $http.post('/me/albums', { name: name }).success(function(data) {
+            console.log(data);
+            if(data.id !== null) {
+                $scope.changeHash('/me/albums/' + data.id + '/photos');
+            }
+        });
+    };
+
+}
+NewAlbumCtrl.$inject = ['$scope', '$http', '$timeout'];

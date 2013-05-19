@@ -22,16 +22,12 @@
             padding-left: 25px;
             padding-right: 25px;
           }
-          @media (max-width: 777px) {
-              body {
-                padding: 0px;
-              }
-              .navbar-fixed-top,
-              .navbar-fixed-bottom,
-              .navbar-static-top {
-                margin-right: 0;
-                margin-left: 0;
-              }
+            .row .span3 {
+                display:none;
+                padding:15px;
+                margin-left:10px;
+                margin-bottom:10px;
+                text-decoration:none;
             }
             .photoSelected {
                 background: green;
@@ -64,6 +60,20 @@
                 margin-right: 35%;
                 margin-top: 50px;
                 width: 30%;
+            }
+          @media (max-width: 777px) {
+              body {
+                padding: 0px;
+              }
+              .navbar-fixed-top,
+              .navbar-fixed-bottom,
+              .navbar-static-top {
+                margin-right: 0;
+                margin-left: 0;
+              }
+              .row .span3 {
+                  margin-left: 0px;
+              }
             }
         </style>
         
@@ -98,10 +108,19 @@
               <a class="brand" href="#">Photo App</a>
               <div class="nav-collapse collapse">
                 <ul class="nav">
-                  <li class="active"><a href="#/">Home</a></li>
-                  <li><a href="#/me/albums">My Albums</a></li>
-                  <li><a href="#/facebook/albums">Import Photos</a></li>
-                  <li><a href="#/me/photos">Recent Photos</a></li>
+                  <!--<li class="active"><a href="#/">Home</a></li>-->
+                    <li data-ng-class="{'active': $route.current.$$route.controller.name==='MyAlbumsCtrl'}">
+                        <a href="#/me/albums">My Albums</a>
+                    </li>
+                    <li data-ng-class="{
+                        'active': 
+                            $route.current.$$route.controller.name==='AlbumsCtrl' ||
+                            $route.current.$$route.controller.name==='PhotosCtrl'}">
+                        <a href="#/facebook/albums">Import Photos</a>
+                    </li>
+                    <li data-ng-class="{'active': $route.current.$$route.controller.name==='MyPhotosCtrl'}">
+                        <a href="#/me/photos">Recent Photos</a>
+                    </li>
                 </ul>
                 <div class="btn-group pull-right">
                   <a class="btn btn-primary" href="" data-ng-show="user.authenticated">
@@ -117,6 +136,8 @@
                     <li><a href="/auth/logout"><i class="i"></i> Log Out</a></li>
                   </ul>
                 </div>
+                <a class="btn btn-success pull-right" href="#/me/albums/new" style="margin-right:5px;" 
+                    data-ng-show="$route.current.$$route.controller.name==='MyAlbumsCtrl'">Create New Album</a>
               </div><!--/.nav-collapse -->
             </div>
           </div>

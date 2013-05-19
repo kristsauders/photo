@@ -1,0 +1,13 @@
+<div class="container">
+    <div class="hero-unit row" style="text-align:center;">
+        <h2>Name Your Album</h2>
+        <form data-ng-submit="createAlbum(albumName)">
+            <p>
+                <input id="albumName" type="text" class="input-xlarge" data-ng-model="albumName" placeholder="My New Album">
+            </p>
+            <p>
+                <button class="btn btn-large btn-success" data-ng-disabled="!(albumName.length > 2)">Go!</button>
+            </p>
+        </form>
+    </div>
+</div>

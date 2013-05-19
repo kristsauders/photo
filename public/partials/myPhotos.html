@@ -1,6 +1,6 @@
 <div>
-    <div id="photos" class="row" style="display:none;margin-left:0px;">
-        <a href="{{photo.images[0].source}}" class="boxer span3 hero-unit photo" style="padding:15px;width:220px;margin-left:10px;margin-bottom:10px;" data-ng-repeat="photo in photos">
+    <div id="photos" class="row" style="margin-left:0px;">
+        <a href="{{photo.images[0].source}}" class="boxer span3 hero-unit photo" data-ng-repeat="photo in photos">
             <img data-ng-src="https://graph.facebook.com/{{photo.id}}/picture?access_token={{user.access_token}}" alt="" title="">
         </a>
     </div>

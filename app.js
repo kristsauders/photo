@@ -135,12 +135,15 @@ var photosSchema = mongoose.Schema({
 });
 
 var photoSchema = mongoose.Schema({
-    height: Number,
-    width: Number,
-    id: Number,
-    source: String,
-    albumId: Number
-})
+    user_id: String,
+    albumId: Number,
+    images: [{
+        height: Number,
+        width: Number,
+        id: Number,
+        source: String
+    }]
+});
 
 // Experimental schema for storing photo album
 var albumSchema = mongoose.Schema({
@@ -157,14 +160,16 @@ app.post('/me/albums', function(req, res) {
     if(req.user===undefined)
         res.send(401, 'You are not logged in.');
     else {
-        var album = new Album({ user_id: req.user.id });
+        // Generate random id for album
+        var id = Math.floor(Math.random() * 9000000000000) + 10000;
+        var album = new Album({ user_id: req.user.id, name: req.body.name, id: id });
         log(album);
         album.save(function(err, album) {
             if(err) {
                 log(err);
             }
             log('Successfully saved album to mongodb');
-            res.send(req.body);
+            res.send(album);
         });
     }
 });
@@ -179,7 +184,7 @@ app.get('/me/albums', function(req, res) {
                 log(err);
             }
             log(albums);
-            res.send(albums);
+            res.send({ data: albums });
         });
     }
 });

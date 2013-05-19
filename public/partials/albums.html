@@ -1,7 +1,7 @@
 <div>
     <!--<img src="/img/loading.gif" class="loading" />-->
     <div id="albums" class="row" style="margin-left:0px;">
-        <a href="#/facebook/albums/{{album.id}}/photos" class="span3 hero-unit album" style="display:none;padding:15px;width:220px;margin-left:10px;margin-bottom:10px;text-decoration:none;" data-ng-repeat="album in albums">
+        <a href="#/facebook/albums/{{album.id}}/photos" class="span3 hero-unit album" data-ng-repeat="album in albums">
             <h4>{{album.name}} <span style="font-size:0.7em;">({{album.count}})</span></h4>
             <img data-ng-src="https://graph.facebook.com/{{album.cover_photo}}/picture?access_token={{user.access_token}}" alt="" title="">
         </a>

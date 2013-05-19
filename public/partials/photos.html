@@ -9,7 +9,7 @@
     <!--<img src="/img/loading.gif" class="loading" />-->
     <h2 class="loading">Loading...</h2>
     <div id="photos" class="row" style="margin-left:0px;">
-        <div class="span3 hero-unit photo" style="display:none;padding:15px;width:220px;margin-left:10px;margin-bottom:10px;" data-ng-class="{photoSelected: photo.selected}" 
+        <div class="span3 hero-unit photo" data-ng-class="{photoSelected: photo.selected}" 
                 data-ng-repeat="photo in photos" data-ng-click="photo.selected = !photo.selected">
             <img data-ng-src="https://graph.facebook.com/{{photo.id}}/picture?access_token={{user.access_token}}" alt="" title="">
         </div>
