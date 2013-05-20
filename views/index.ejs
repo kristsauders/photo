@@ -138,6 +138,8 @@
                 </div>
                 <a class="btn btn-success pull-right" href="#/me/albums/new" style="margin-right:5px;" 
                     data-ng-show="$route.current.$$route.controller.name==='MyAlbumsCtrl'">Create New Album</a>
+                <a class="btn btn-success pull-right" href="#/import/{{$route.current.pathParams.albumId}}/facebook/albums" style="margin-right:5px;" 
+                    data-ng-show="$route.current.$$route.controller.name==='MyAlbumPhotosCtrl'">Add Photos</a>
               </div><!--/.nav-collapse -->
             </div>
           </div>

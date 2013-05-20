@@ -35,3 +35,4 @@
 {"ts":1368418342028,"patch":[[{"diffs":[[0,"      </"],[-1,"div"],[1,"a"],[0,">\n    </"]],"start1":396,"start2":396,"length1":19,"length2":17}]],"length":424,"saved":false}
 {"ts":1368921478014,"patch":[[{"diffs":[[0,"oto\""],[-1," style=\"padding:15px;width:220px;margin-left:10px;margin-bottom:10px;\""],[0," dat"]],"start1":154,"start2":154,"length1":78,"length2":8}]],"length":354,"saved":false}
 {"ts":1368921499416,"patch":[[{"diffs":[[0,"le=\""],[-1,"display:none;"],[0,"marg"]],"start1":42,"start2":42,"length1":21,"length2":8}]],"length":341,"saved":false}
+{"ts":1369016230851,"patch":[[{"diffs":[[0,"<div>\n"],[1,"    <h2 class=\"loading\">Loading...</h2>\n"],[0,"    <div"]],"start1":0,"start2":0,"length1":14,"length2":54}]],"length":381,"saved":false}

@@ -8,11 +8,11 @@ config(['$routeProvider', function($routeProvider) {
     when('/login', {
         templateUrl: 'partials/login.html'
     }).
-    when('/facebook/albums', {
+    when('/import/:albumId/facebook/albums', {
         templateUrl: 'partials/albums.html',
         controller: AlbumsCtrl
     }).
-    when('/facebook/albums/:albumId/photos', {
+    when('/import/facebook/albums/:albumId/photos', {
         templateUrl: 'partials/photos.html',
         controller: PhotosCtrl
     }).
@@ -21,7 +21,7 @@ config(['$routeProvider', function($routeProvider) {
         controller: MyPhotosCtrl
     }).
     when('/me/albums', {
-        templateUrl: 'partials/albums.html',
+        templateUrl: 'partials/myAlbums.html',
         controller: MyAlbumsCtrl
     }).
     when('/me/albums/new', {
@@ -225,12 +225,12 @@ function PhotosCtrl($scope, $http, $timeout, $routeParams) {
                 if(photos[i].selected)
                     selectedPhotos.push(photos[i]);
             }
-            $http.post('/me/photos', selectedPhotos).success(function(data) {
+            $http.post('/me/albums/' + $routeParams.albumId + '/photos', selectedPhotos).success(function(data) {
                 console.log(data);
             });
             $scope.$parent.photos = selectedPhotos;
             $timeout(function(){
-                $scope.changeHash('/me/photos');
+                $scope.changeHash('/me/albums/' + $routeParams.albumId + '/photos');
             }, 900);
         //}, 900);
     };
@@ -366,7 +366,7 @@ function MyAlbumPhotosCtrl($scope, $http, $timeout, $routeParams) {
     function init() {
         $timeout(function() {
             var $c = $('#photos');
-            //$c.imagesLoaded(function() {
+            $c.imagesLoaded(function() {
                 $('.loading').fadeOut(100);
                 $('#photos .span3').fadeIn(500);
                 $c.isotope({
@@ -375,13 +375,12 @@ function MyAlbumPhotosCtrl($scope, $http, $timeout, $routeParams) {
                     //    columnWidth: 65
                     //}
                 });
-            //});
+            });
         });
     }
     
     function getPage(pageUrl) {
-        pageUrl += "&callback=JSON_CALLBACK";
-        $http.jsonp(pageUrl).success(function(data) {
+        $http.get(pageUrl).success(function(data) {
             console.log(data);
             page += 1;
             $scope.photos.push.apply($scope.photos, data.data);
@@ -403,7 +402,7 @@ function MyAlbumPhotosCtrl($scope, $http, $timeout, $routeParams) {
         getPage($scope.nextPage);
     };
 
-    var url = "https://graph.facebook.com/" + $routeParams.albumId + "/photos?limit=25&fields=id,images&access_token=" + $scope.user.access_token;
+    var url = "/me/albums/" + $routeParams.albumId + "/photos";
     
     getPage(url);
 
@@ -424,7 +423,7 @@ function NewAlbumCtrl($scope, $http, $timeout) {
             console.log(data);
             if(data.id !== null) {
                 //$scope.changeHash('/me/albums/' + data.id + '/photos');
-                $scope.changeHash('/me/albums');
+                $scope.changeHash('/me/albums/' + data.id + '/photos');
             }
         });
     };

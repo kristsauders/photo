@@ -137,10 +137,10 @@ var photosSchema = mongoose.Schema({
 var photoSchema = mongoose.Schema({
     user_id: String,
     albumId: Number,
+    id: Number,
     images: [{
         height: Number,
         width: Number,
-        id: Number,
         source: String
     }]
 });
@@ -203,6 +203,46 @@ var Photos = mongoose.model('Photos', photosSchema);
 //  if (err){} // TODO handle the error
   //fluffy.speak();
 //});
+
+app.post('/me/albums/:albumId/photos', function(req, res) {
+    if(req.user===undefined)
+        res.send(401, 'You are not logged in.');
+    else {
+        console.log(req.body);
+        for(var i in req.body) {
+            console.log(i);
+            console.log(req.body[i]);
+            var photo = new Photo({ 
+                user_id: req.user.id, 
+                albumId: req.params.albumId,
+                id: req.body[i].id,
+                images: req.body[i].images
+            });
+            log(photo);
+            photo.save(function(err) {
+                if(err) {
+                    log(err);
+                }
+            });
+        }
+        res.send(req.body);
+    }
+});
+
+app.get('/me/albums/:albumId/photos', function(req, res) {
+    if(req.user===undefined)
+        res.send(401, 'You are not logged in.');
+    else {
+        Photo.find({user_id: req.user.id, albumId: req.params.albumId}, function(err, photos) {
+            if(err) {
+                log(err);
+            }
+            log(photos);
+            res.send({ data: photos, paging: {} });
+        })
+        //res.send(req.body);
+    }
+});
 
 // Save a new photo album, still early stage
 app.post('/me/photos', function(req, res) {

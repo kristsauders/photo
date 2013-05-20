@@ -1,4 +1,5 @@
 <div>
+    <h2 class="loading">Loading...</h2>
     <div id="photos" class="row" style="margin-left:0px;">
         <a href="{{photo.images[0].source}}" class="boxer span3 hero-unit photo" data-ng-repeat="photo in photos">
             <img data-ng-src="https://graph.facebook.com/{{photo.id}}/picture?access_token={{user.access_token}}" alt="" title="">
