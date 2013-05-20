@@ -8,11 +8,11 @@ config(['$routeProvider', function($routeProvider) {
     when('/login', {
         templateUrl: 'partials/login.html'
     }).
-    when('/import/:albumId/facebook/albums', {
+    when('/import/:myAlbumId/facebook/albums', {
         templateUrl: 'partials/albums.html',
         controller: AlbumsCtrl
     }).
-    when('/import/facebook/albums/:albumId/photos', {
+    when('/import/:myAlbumId/facebook/albums/:albumId/photos', {
         templateUrl: 'partials/photos.html',
         controller: PhotosCtrl
     }).
@@ -225,12 +225,12 @@ function PhotosCtrl($scope, $http, $timeout, $routeParams) {
                 if(photos[i].selected)
                     selectedPhotos.push(photos[i]);
             }
-            $http.post('/me/albums/' + $routeParams.albumId + '/photos', selectedPhotos).success(function(data) {
+            $http.post('/me/albums/' + $routeParams.myAlbumId + '/photos', selectedPhotos).success(function(data) {
                 console.log(data);
             });
             $scope.$parent.photos = selectedPhotos;
             $timeout(function(){
-                $scope.changeHash('/me/albums/' + $routeParams.albumId + '/photos');
+                $scope.changeHash('/me/albums/' + $routeParams.myAlbumId + '/photos');
             }, 900);
         //}, 900);
     };
@@ -375,6 +375,18 @@ function MyAlbumPhotosCtrl($scope, $http, $timeout, $routeParams) {
                     //    columnWidth: 65
                     //}
                 });
+                $('#photos .span3').resizable({
+                    //grid: 130,
+                    aspectRatio: true,
+                    start: function(event, ui) {
+                        $(this).css('z-index', 999);
+                    },
+                    stop: function(event, ui) {
+                        $(this).css('z-index', 2);
+                        $c.isotope('reLayout');
+                    }
+                });
+                $('.boxer').boxer();
             });
         });
     }
@@ -392,6 +404,18 @@ function MyAlbumPhotosCtrl($scope, $http, $timeout, $routeParams) {
                     $('#photos').imagesLoaded(function(){
                         $("#photos .span3:not('.isotope-item')").show();
                         $('#photos').isotope('appended', $("#photos .span3:not('.isotope-item')"));
+                        $('#photos .span3').resizable({
+                            //grid: 130,
+                            aspectRatio: true,
+                            start: function(event, ui) {
+                                $(this).css('z-index', 999);
+                            },
+                            stop: function(event, ui) {
+                                $(this).css('z-index', 2);
+                                $('#photos').isotope('reLayout');
+                            }
+                        });
+                        $('.boxer').boxer();
                     });
                 });
             }
