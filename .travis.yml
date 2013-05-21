@@ -1,3 +1,12 @@
- language: node_js
- node_js:
-   - "0.8"
+language: node_js
+node_js:
+  - "0.8"
+
+env:
+  global:
+    - secure: ""
+
+after_success:
+  - if [[ "$TRAVIS_BRANCH" != "master" ]]; then echo "Deployments are only done for the master branch. "; exit 0; fi
+  - echo "Deploying build $TRAVIS_BUILD_NUMBER"
+  - ./deploy_to_appfog.sh
