@@ -9,5 +9,5 @@ if [ -z "$CLOUDFOUNDRY_PASSWORD" ]; then
 fi
 gem install af
 af target https://api.appfog.com
-af login --email $CLOUDFOUNDRY_USERNAME --passwd '$CLOUDFOUNDRY_PASSWORD'
+af login --email $CLOUDFOUNDRY_USERNAME --passwd "$CLOUDFOUNDRY_PASSWORD"
 af update photo
