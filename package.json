@@ -3,5 +3,7 @@
   "version":"0.0.1",
   "dependencies":{
     "express":""
-  }
+  },
+  "scripts": { "test": "node tests.js" },
+  "devDependencies": { "test": ">=0.0.5" }
 }
