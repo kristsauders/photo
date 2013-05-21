@@ -2,7 +2,7 @@ var photo = angular.module('photo', []).
 config(['$routeProvider', function($routeProvider) {
     $routeProvider.
     when('/', {
-        templateUrl: 'partials/albums.html',
+        templateUrl: 'partials/myAlbums.html',
         controller: MyAlbumsCtrl
     }).
     when('/login', {

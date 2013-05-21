@@ -61,10 +61,12 @@
                 margin-top: 50px;
                 width: 30%;
             }
-          @media (max-width: 777px) {
-              body {
-                padding: 0px;
-              }
+            @media only screen 
+            and (min-device-width : 320px) 
+            and (max-device-width : 480px) {
+                body {
+                    padding: 0;
+                }
               .navbar-fixed-top,
               .navbar-fixed-bottom,
               .navbar-static-top {
@@ -72,7 +74,23 @@
                 margin-left: 0;
               }
               .row .span3 {
-                  margin-left: 0px;
+                  margin-left: 0;
+              }
+            }
+            @media only screen 
+            and (min-device-width : 768px) 
+            and (max-device-width : 1024px) {
+                body {
+                    padding: 0;
+                }
+              .navbar-fixed-top,
+              .navbar-fixed-bottom,
+              .navbar-static-top {
+                margin-right: 0;
+                margin-left: 0;
+              }
+              .row .span3 {
+                  width: 235px;
               }
             }
         </style>
@@ -111,15 +129,6 @@
                   <!--<li class="active"><a href="#/">Home</a></li>-->
                     <li data-ng-class="{'active': $route.current.$$route.controller.name==='MyAlbumsCtrl'}">
                         <a href="#/me/albums">My Albums</a>
-                    </li>
-                    <li data-ng-class="{
-                        'active': 
-                            $route.current.$$route.controller.name==='AlbumsCtrl' ||
-                            $route.current.$$route.controller.name==='PhotosCtrl'}">
-                        <a href="#/facebook/albums">Import Photos</a>
-                    </li>
-                    <li data-ng-class="{'active': $route.current.$$route.controller.name==='MyPhotosCtrl'}">
-                        <a href="#/me/photos">Recent Photos</a>
                     </li>
                 </ul>
                 <div class="btn-group pull-right">
