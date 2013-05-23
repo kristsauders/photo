@@ -156,6 +156,10 @@ function AlbumsCtrl($scope, $http, $timeout) {
     var url = "https://graph.facebook.com/me/albums?limit=25&fields=id,name,count,cover_photo&access_token=" + $scope.user.access_token;
 
     getPage(url);
+    
+    window.onorientationchange = function() {
+        $('#albums').isotope('reLayout');
+    }
 
 }
 AlbumsCtrl.$inject = ['$scope', '$http', '$timeout'];
@@ -246,6 +250,10 @@ function PhotosCtrl($scope, $http, $timeout, $routeParams) {
             $scope.photos[i].selected = false;
         }
     };
+    
+    window.onorientationchange = function() {
+        $('#photos').isotope('reLayout');
+    }
 
 }
 PhotosCtrl.$inject = ['$scope', '$http', '$timeout', '$routeParams'];
@@ -293,6 +301,10 @@ function MyPhotosCtrl($scope, $http, $timeout, $routeParams) {
         }, 500);
     
     });
+    
+    window.onorientationchange = function() {
+        $('#photos').isotope('reLayout');
+    }
 
 }
 MyPhotosCtrl.$inject = ['$scope', '$http', '$timeout', '$routeParams'];
@@ -349,6 +361,10 @@ function MyAlbumsCtrl($scope, $http, $timeout) {
     var url = "/me/albums";
 
     getPage(url);
+    
+    window.onorientationchange = function() {
+        $('#albums').isotope('reLayout');
+    }
 
 }
 MyAlbumsCtrl.$inject = ['$scope', '$http', '$timeout'];
@@ -429,6 +445,10 @@ function MyAlbumPhotosCtrl($scope, $http, $timeout, $routeParams) {
     var url = "/me/albums/" + $routeParams.albumId + "/photos";
     
     getPage(url);
+    
+    window.onorientationchange = function() {
+        $('#photos').isotope('reLayout');
+    }
 
 }
 MyAlbumPhotosCtrl.$inject = ['$scope', '$http', '$timeout', '$routeParams'];
