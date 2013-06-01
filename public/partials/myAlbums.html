@@ -6,7 +6,7 @@
             <!--<img data-ng-src="https://graph.facebook.com/{{album.cover_photo}}/picture?access_token={{user.access_token}}" alt="" title="">-->
         </a>
     </div>
-    <a href="#/me/albums/new" style="margin:25px;" data-ng-show="albums.length===0">
+    <a href="#/me/albums/new" style="margin:25px;display:none" id="newAlbumButton">
         <button type="button" class="btn btn-large btn-primary">Create Your First Album</button>
     </a>
     <button type="button" class="btn btn-large btn-primary pull-right" 

@@ -5,7 +5,7 @@
             <img data-ng-src="https://graph.facebook.com/{{photo.id}}/picture?access_token={{user.access_token}}" alt="" title="">
         </a>
     </div>
-    <a href="#/import/{{$route.current.pathParams.albumId}}/facebook/albums" style="margin:25px;" data-ng-show="photos.length===0">
+    <a href="#/import/{{$route.current.pathParams.albumId}}/facebook/albums" style="margin:25px;display:none;" id="newPhotoButton">
         <button type="button" class="btn btn-large btn-primary">Add Your First Photos</button>
     </a>
     <button type="button" class="btn btn-large btn-primary pull-right" 

@@ -321,6 +321,9 @@ function MyAlbumsCtrl($scope, $http, $timeout) {
 
     function init() {
         $timeout(function() {
+            if($scope.albums.length===0) {
+                $('#newAlbumButton').fadeIn();
+            }
             var $c = $('#albums');
             $c.imagesLoaded(function() {
                 $('.loading').fadeOut(100);
@@ -383,6 +386,9 @@ function MyAlbumPhotosCtrl($scope, $http, $timeout, $routeParams) {
         $timeout(function() {
             var $c = $('#photos');
             $c.imagesLoaded(function() {
+                if($scope.photos.length===0) {
+                    $('#newPhotoButton').fadeIn();
+                }
                 $('.loading').fadeOut(100);
                 $('#photos .span3').fadeIn(500);
                 $c.isotope({
