@@ -10,4 +10,4 @@ fi
 gem install af
 af target https://api.appfog.com
 af login --email $CLOUDFOUNDRY_USERNAME --passwd $CLOUDFOUNDRY_PASSWORD
-af update photo
+af update photo-app
