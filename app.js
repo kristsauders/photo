@@ -25,7 +25,7 @@ if(process.env.VCAP_SERVICES!==undefined) {
     env = JSON.parse(process.env.VCAP_SERVICES);
     log(env);
     mongourl = env['mongodb-1.8'][0].credentials;
-    callbackURL = 'http://photo-app.eu01.aws.af.cm/auth/facebook/callback';
+    callbackURL = 'http://photo.kristsauders.com/auth/facebook/callback';
     sessionStore = new MongoStore({
         db: 'photo',
         auto_reconnect: true
