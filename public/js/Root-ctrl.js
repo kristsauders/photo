@@ -279,17 +279,19 @@ function MyPhotosCtrl($scope, $http, $timeout, $routeParams) {
                     //    columnWidth: 65
                     //}
                 });
-                $('#photos .span3').resizable({
-                    //grid: 130,
-                    aspectRatio: true,
-                    start: function(event, ui) {
-                        $(this).css('z-index', 999);
-                    },
-                    stop: function(event, ui) {
-                        $(this).css('z-index', 2);
-                        $c.isotope('reLayout');
-                    }
-                });
+                
+                //$('#photos .span3').resizable({
+                //    //grid: 130,
+                //    aspectRatio: true,
+                //    start: function(event, ui) {
+                //        $(this).css('z-index', 999);
+                //    },
+                //    stop: function(event, ui) {
+                //        $(this).css('z-index', 2);
+                //        $c.isotope('reLayout');
+                //    }
+                //});
+                
                 //$('#photos .span3').rotatable();
                 //$('#photos .span3').each(function(){
                 //    $(this).zoomTarget({
@@ -397,17 +399,19 @@ function MyAlbumPhotosCtrl($scope, $http, $timeout, $routeParams) {
                     //    columnWidth: 65
                     //}
                 });
-                $('#photos .span3').resizable({
-                    //grid: 130,
-                    aspectRatio: true,
-                    start: function(event, ui) {
-                        $(this).css('z-index', 999);
-                    },
-                    stop: function(event, ui) {
-                        $(this).css('z-index', 2);
-                        $c.isotope('reLayout');
-                    }
-                });
+                
+                //$('#photos .span3').resizable({
+                //    //grid: 130,
+                //    aspectRatio: true,
+                //    start: function(event, ui) {
+                //        $(this).css('z-index', 999);
+                //    },
+                //    stop: function(event, ui) {
+                //        $(this).css('z-index', 2);
+                //        $c.isotope('reLayout');
+                //    }
+                //});
+                
                 $('.boxer').boxer();
             });
         });
